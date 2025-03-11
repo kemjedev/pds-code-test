@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Services;
+using UKParliament.CodeTest.Web.ApplicationUserIdentity;
 using UKParliament.CodeTest.Web.Components;
 using UKParliament.CodeTest.Web.Components.Account;
-using UKParliament.CodeTest.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,10 +33,13 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddHttpClient();
 
+builder.Services.AddScoped<IPersonService, PersonService>();
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
