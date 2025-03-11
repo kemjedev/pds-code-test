@@ -6,12 +6,16 @@ public class PersonManagerContext : DbContext
 {
     public PersonManagerContext(DbContextOptions<PersonManagerContext> options) : base(options)
     {
-
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Person>()
+            .HasOne(p => p.Department)
+            .WithMany(d => d.People)
+            .HasForeignKey(p => p.DepartmentId);
 
         modelBuilder.Entity<Department>().HasData(
             new Department { Id = 1, Name = "Sales" },
@@ -21,6 +25,5 @@ public class PersonManagerContext : DbContext
     }
 
     public DbSet<Person> People { get; set; }
-
     public DbSet<Department> Departments { get; set; }
 }
