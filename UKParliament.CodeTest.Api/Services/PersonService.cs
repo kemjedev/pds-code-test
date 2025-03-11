@@ -3,11 +3,10 @@ using FluentResults;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
-using UKParliament.CodeTest.Api.Services;
 using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Dtos;
 
-namespace UKParliament.CodeTest.Services
+namespace UKParliament.CodeTest.Api.Services
 {
     public class PersonService : IPersonService
     {

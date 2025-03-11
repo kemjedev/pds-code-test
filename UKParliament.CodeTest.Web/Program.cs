@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using UKParliament.CodeTest.Services;
+using UKParliament.CodeTest.Web.Services;
 using UKParliament.CodeTest.Web.ApplicationUserIdentity;
 using UKParliament.CodeTest.Web.Components;
 using UKParliament.CodeTest.Web.Components.Account;
