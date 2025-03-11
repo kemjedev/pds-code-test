@@ -1,0 +1,51 @@
+﻿@using UKParliament.CodeTest.Dtos
+@using UKParliament.CodeTest.Web.Services
+@inject IPersonService PersonService
+
+<h3>Edit Person</h3>
+
+<EditForm Model="Person" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <InputText id="firstName" class="form-control" @bind-Value="Person.FirstName" />
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <InputText id="lastName" class="form-control" @bind-Value="Person.LastName" />
+    </div>
+    <div class="form-group">
+        <label for="dateOfBirth">Date of Birth</label>
+        <InputDate id="dateOfBirth" class="form-control" @bind-Value="Person.DateOfBirth" />
+    </div>
+    <div class="form-group">
+        <label for="department">Department</label>
+        <InputText id="department" class="form-control" @bind-Value="Person.Department.Name" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public PersonDto Person { get; set; }
+
+    [Parameter]
+    public EventCallback<PersonDto> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        await OnSave.InvokeAsync(Person);
+    }
+
+    private async Task Cancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
+}
