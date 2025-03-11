@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using UKParliament.CodeTest.Web.ApplicationUserIdentity;
 using UKParliament.CodeTest.Web.Components.Account.Pages;
 using UKParliament.CodeTest.Web.Components.Account.Pages.Manage;
-using UKParliament.CodeTest.Web.Data;
 
 namespace Microsoft.AspNetCore.Routing;
 
