@@ -36,6 +36,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 //TODO - probably don't need this for a demo
 //builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+builder.Services.AddHttpClient();
 builder.Services.AddScoped<IPersonService, PersonService>();
  
 var app = builder.Build();
