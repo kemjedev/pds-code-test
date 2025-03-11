@@ -1,0 +1,17 @@
+﻿body {
+    font-size: 1.25rem;
+    line-height: 1.2;
+}
+
+header {
+    background-color: #373151;
+    padding: 5px 0;
+    color: #fff;
+}
+
+.banner {
+    background-color: #373151;
+    color: #fff;
+    padding: 25px 0 30px;
+    border-top: 1px solid #625a75;
+}

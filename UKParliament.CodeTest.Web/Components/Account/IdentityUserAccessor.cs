@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Identity;
-using UKParliament.CodeTest.Web.Data;
+using UKParliament.CodeTest.Web.ApplicationUserIdentity;
 
 namespace UKParliament.CodeTest.Web.Components.Account;
 
