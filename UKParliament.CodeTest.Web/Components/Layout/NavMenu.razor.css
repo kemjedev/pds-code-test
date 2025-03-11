@@ -26,6 +26,12 @@
     font-size: 1.1rem;
 }
 
+.navbar-brand-img {
+    height: auto;
+    display: block;
+    opacity: 1;
+}
+
 .bi {
     display: inline-block;
     position: relative;
