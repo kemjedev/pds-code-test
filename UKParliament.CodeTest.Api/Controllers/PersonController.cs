@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UKParliament.CodeTest.Api.Services;
+using UKParliament.CodeTest.Data;
 using UKParliament.CodeTest.Dtos;
 
 namespace UKParliament.CodeTest.Api.Controllers
@@ -21,10 +22,11 @@ namespace UKParliament.CodeTest.Api.Controllers
 
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
+        [Route("all")]
         public async Task<ActionResult<GetPeopleResponseDto>> GetPeople()
         {
-            var result = await _personService.GetPersonsAsync();
+            var result = await _personService.GetPeopleAsync();
 
             if (result.IsSuccess)
             {
@@ -43,8 +45,32 @@ namespace UKParliament.CodeTest.Api.Controllers
             });
         }
 
+        [HttpGet("{id}")]
+        //[Authorize]     
+        public async Task<ActionResult<GetPersonResponseDto>> GetPersonById(int id)
+        {
+            var result = await _personService.GetPersonByIdAsync(id);
+
+            if (result.IsSuccess) 
+            {
+                return Ok(new GetPersonResponseDto()
+                {
+                    IsSuccess = true,
+                    Message = "Person retrieved successfully.",
+                    Person = result.Value
+                });
+            }
+
+            return NotFound(new GetPersonResponseDto()
+            {
+                IsSuccess = false,
+                Message = "Person not found."
+            });
+        }
+
         [HttpPost]
-        [Authorize]
+        //[Authorize]
+        [Route("create")]
         public async Task<ActionResult<CreatePersonResponseDto>> CreateNewPerson(PersonDto personDto)
         {
             var result = await _personService.CreateNewPersonAsync(personDto);
@@ -67,7 +93,8 @@ namespace UKParliament.CodeTest.Api.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        //[Authorize]
+        [Route("update")]
         public async Task<ActionResult<UpdatePersonResponseDto>> UpdatePerson(PersonDto updatePersonDto)
         {
             var result = await _personService.UpdatePersonAsync(updatePersonDto);
@@ -88,6 +115,5 @@ namespace UKParliament.CodeTest.Api.Controllers
                 Message = result.Errors.FirstOrDefault()?.Message ?? "An error occurred while updating the person."
             });
         }
-
     }
 }

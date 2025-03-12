@@ -1,6 +1,6 @@
 ﻿namespace UKParliament.CodeTest.Dtos
 {
-    public class UpdatePersonResponseDto : ResponseDtoBase
+    public class GetPersonResponseDto : ResponseDtoBase
     {
         public PersonDto? Person { get; set; }
     }

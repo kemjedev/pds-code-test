@@ -1,0 +1,140 @@
+﻿@using UKParliament.CodeTest.Dtos
+@using UKParliament.CodeTest.Web.Services
+@inject IPersonService PersonService
+@inject IDepartmentService DepartmentService
+
+@rendermode InteractiveServer
+
+<h3>Edit Person</h3>
+
+@if (validationErrors.Any())
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var error in validationErrors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
+}
+
+<EditForm EditContext="EditContext" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <InputText id="firstName" class="form-control" @bind-Value="Person.FirstName" @onchange="ValidateField" />
+        <ValidationMessage For="@(() => Person.FirstName)" />
+    </div>
+    <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <InputText id="lastName" class="form-control" @bind-Value="Person.LastName" @onchange="ValidateField" />
+        <ValidationMessage For="@(() => Person.LastName)" />
+    </div>
+    <div class="form-group">
+        <label for="dateOfBirth">Date of Birth</label>
+        <InputDate id="dateOfBirth" class="form-control" @bind-Value="Person.DateOfBirth" @onchange="ValidateField" />
+        <ValidationMessage For="@(() => Person.DateOfBirth)" />
+    </div>
+
+    <div class="form-group">
+        <label for="department">Department</label>
+        <InputSelect id="department" class="form-control" @bind-Value="Person.DepartmentId" @onchange="ValidateField">
+            <option value="">Select a department</option>
+            @foreach (var department in _departments)
+            {
+                <option value="@department.Id">@department.Name</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Person.DepartmentId)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public PersonDto Person { get; set; }
+
+    [Parameter]
+    public EventCallback<PersonDto> OnSave { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    [Parameter]
+    public EditContext EditContext { get; set; }
+
+    private IEnumerable<DepartmentDto> _departments { get; set; } = new List<DepartmentDto>();
+
+    private List<string> validationErrors = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _departments = await DepartmentService.GetDepartmentsAsync();
+        EditContext.OnFieldChanged += HandleFieldChanged;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (ValidatePerson())
+        {
+            await OnSave.InvokeAsync(Person);
+        }
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        ValidatePerson();
+    }
+
+    private async Task Cancel()
+    {
+        await OnCancel.InvokeAsync();
+    }
+
+    private void HandleFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        ValidatePerson();
+    }
+
+    private bool ValidatePerson()
+    {
+        validationErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(Person.FirstName))
+        {
+            validationErrors.Add("First Name is required.");
+        }
+
+        if (string.IsNullOrWhiteSpace(Person.LastName))
+        {
+            validationErrors.Add("Last Name is required.");
+        }
+
+        if (Person.DateOfBirth == default)
+        {
+            validationErrors.Add("Date of Birth is required.");
+        }
+        else if (Person.DateOfBirth > DateTime.Now.AddYears(-18))
+        {
+            validationErrors.Add("Person must be at least 18 years old.");
+        }
+
+        if (Person.DepartmentId == 0)
+        {
+            validationErrors.Add("Department is required.");
+        }
+
+        StateHasChanged();
+
+        return !validationErrors.Any();
+    }
+
+    private void ValidateField(ChangeEventArgs e)
+    {
+        ValidatePerson();
+    }
+
+}

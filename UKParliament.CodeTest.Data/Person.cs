@@ -12,5 +12,5 @@ public class Person
     public required string LastName { get; set; }
     public required DateTime DateOfBirth { get; set; }
     public int DepartmentId { get; set; }
-    public required Department Department { get; set; }
+    public Department? Department { get; set; }
 }

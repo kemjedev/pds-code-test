@@ -1,0 +1,65 @@
+﻿@using UKParliament.CodeTest.Dtos
+@using UKParliament.CodeTest.Web.Services
+@inject IPersonService PersonService
+
+@rendermode InteractiveServer
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date of Birth</th>
+            <th>Department</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (persons != null && persons.Any())
+        {
+            @foreach (var person in persons)
+            {
+                <tr>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.DateOfBirth.ToShortDateString()</td>
+                    <td>@person.Department.Name</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" id="edit-button-@person.Id" @onclick="@(async () => await EditPerson(person))">Edit</button>
+                    </td>
+                </tr>
+            }
+        } else {
+            <tr>
+                <td colspan="5">There are no people in the database yet. Click Add Person to enter a new person.</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+@code {
+    private List<PersonDto> persons;
+
+
+    [Parameter]
+    public EventCallback<PersonDto> OnEditPerson { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshList();
+    }
+
+    public async Task RefreshList()
+    {
+        persons = (await PersonService.GetPeopleAsync()).ToList();
+    }
+
+    private async Task EditPerson(PersonDto person)
+    {
+        await OnEditPerson.InvokeAsync(person);
+    }
+
+}
