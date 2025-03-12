@@ -5,7 +5,7 @@
 
 @rendermode InteractiveServer
 
-<h3>Edit Person</h3>
+<h3>@(Person.Id == 0 ? "Add New Person" : "Edit Person")</h3>
 
 @if (validationErrors.Any())
 {

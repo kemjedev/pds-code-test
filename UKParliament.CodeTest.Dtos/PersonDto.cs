@@ -3,10 +3,10 @@
     public class PersonDto
     {
         public int Id { get; set; }
-        public required string FirstName { get; set; }
-        public required string LastName { get; set; }
-        public required DateTime DateOfBirth { get; set; }
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public DateTime? DateOfBirth { get; set; }
         public int DepartmentId { get; set; }
-        public required DepartmentDto Department { get; set; }
+        public DepartmentDto? Department { get; set; } 
     }
 }

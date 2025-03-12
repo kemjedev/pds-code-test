@@ -57,13 +57,35 @@ namespace UKParliament.CodeTest.Api.Services
 
         public async Task<Result<PersonDto>> UpdatePersonAsync(PersonDto personDto)
         {
+
+            ValidationResult validationResult = await _validator.ValidateAsync(personDto);
+            if (!validationResult.IsValid)
+            {
+                return Result.Fail(validationResult.Errors.Select(e => new Error(e.ErrorMessage)).ToList());
+            }
+
             var person = await _context.People.FindAsync(personDto.Id);
             if (person == null)
             {
                 return Result.Fail("Person not found.");
             }
 
-            _mapper.Map(personDto, person);
+            try
+            {
+                //TODO - resolve issue with the mapping back to the entity
+                //_mapper.Map(personDto, person);
+                //user explicit property mapping for now
+
+                person.FirstName = personDto.FirstName;
+                person.LastName = personDto.LastName;
+                person.DateOfBirth = (DateTime)personDto.DateOfBirth!;
+                person.DepartmentId = personDto.DepartmentId;                
+
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail("An error occurred while updating the person.");
+            }
 
             _context.People.Update(person);
             await _context.SaveChangesAsync();

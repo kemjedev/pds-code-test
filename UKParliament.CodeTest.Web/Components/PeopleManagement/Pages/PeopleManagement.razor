@@ -10,6 +10,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-sm-12">
+            <button class="btn btn-primary mb-3" @onclick="AddPerson">Add Person</button>
             <PersonList @ref="_personList" OnEditPerson="EditPerson" />
         </div>
 
@@ -33,11 +34,25 @@
         _editContext = new EditContext(_selectedPerson);
     }
 
+    private void AddPerson()
+    {
+        _selectedPerson = new PersonDto();
+        _editContext = new EditContext(_selectedPerson);
+    }
+
     private async Task SavePerson(PersonDto person)
     {
-        await PersonService.UpdatePersonAsync(person);
+        if (person.Id == 0)
+        {
+            await PersonService.CreateNewPersonAsync(person);
+        }
+        else
+        {
+            await PersonService.UpdatePersonAsync(person);
+        }
         _selectedPerson = null;
         await _personList.RefreshList();
+        StateHasChanged();
     }
 
     private void CancelEdit()
