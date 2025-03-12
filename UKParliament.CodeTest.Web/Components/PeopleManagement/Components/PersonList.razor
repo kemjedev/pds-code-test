@@ -22,8 +22,8 @@
                 <tr>
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
-                    <td>@person.DateOfBirth.ToShortDateString()</td>
-                    <td>@person.Department.Name</td>
+                    <td>@person.DateOfBirth?.ToShortDateString()</td>
+                    <td>@person.Department?.Name</td>
                     <td>
                         <button type="button" class="btn btn-primary" id="edit-button-@person.Id" @onclick="@(async () => await EditPerson(person))">Edit</button>
                     </td>

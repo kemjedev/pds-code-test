@@ -32,8 +32,15 @@ public class PersonService : IPersonService
     {
         var response = await _httpClient.PostAsJsonAsync("data-api/persons/create", personDto);
         response.EnsureSuccessStatusCode();
-        var createdPerson = await response.Content.ReadFromJsonAsync<PersonDto>();
-        return createdPerson ?? throw new InvalidOperationException("Failed to create person.");
+
+        var responseDto = await response.Content.ReadFromJsonAsync<CreatePersonResponseDto>();
+
+        if (responseDto?.Person != null && responseDto.IsSuccess)
+        {
+            return responseDto.Person;
+        }
+
+        return default!;
     }
 
     public async Task<PersonDto> GetPersonByIdAsync(int id)
@@ -53,7 +60,14 @@ public class PersonService : IPersonService
     {
         var response = await _httpClient.PutAsJsonAsync($"data-api/persons/update", personDto);
         response.EnsureSuccessStatusCode();
-        var updatedPerson = await response.Content.ReadFromJsonAsync<PersonDto>();
-        return updatedPerson ?? throw new InvalidOperationException("Failed to update person.");
+
+        var responseDto = await response.Content.ReadFromJsonAsync<UpdatePersonResponseDto>();
+
+        if (responseDto?.Person != null && responseDto.IsSuccess)
+        {
+            return responseDto.Person;
+        }
+
+        return default!;
     }
 }
