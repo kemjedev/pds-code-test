@@ -21,11 +21,21 @@ namespace UKParliament.CodeTest.Api.Services
             _validator = validator;
         }
 
-        public async Task<Result<IEnumerable<PersonDto>>> GetPersonsAsync()
+        public async Task<Result<IEnumerable<PersonDto>>> GetPeopleAsync()
         {
-            var people = await _context.People.ToListAsync();
+            var people = await _context.People.Include(p => p.Department).ToListAsync();
             var peopleDto = _mapper.Map<IEnumerable<PersonDto>>(people);
             return Result.Ok(peopleDto);
+        }
+
+        public async Task<Result<PersonDto>> GetPersonByIdAsync(int id)
+        {
+            var person = await _context.People.FirstOrDefaultAsync();
+            if (person != null)
+            {
+                return Result.Ok(_mapper.Map<PersonDto>(person));
+            }
+            return Result.Fail("Person not found.");
         }
 
         public async Task<Result<PersonDto>> CreateNewPersonAsync(PersonDto personDto)

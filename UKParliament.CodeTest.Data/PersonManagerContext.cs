@@ -16,12 +16,6 @@ public class PersonManagerContext : DbContext
             .HasOne(p => p.Department)
             .WithMany(d => d.People)
             .HasForeignKey(p => p.DepartmentId);
-
-        modelBuilder.Entity<Department>().HasData(
-            new Department { Id = 1, Name = "Sales" },
-            new Department { Id = 2, Name = "Marketing" },
-            new Department { Id = 3, Name = "Finance" },
-            new Department { Id = 4, Name = "HR" });
     }
 
     public DbSet<Person> People { get; set; }

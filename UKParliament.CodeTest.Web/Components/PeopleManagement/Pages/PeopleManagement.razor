@@ -1,0 +1,47 @@
+﻿@page "/people-management"
+@using UKParliament.CodeTest.Dtos
+@using UKParliament.CodeTest.Web.Components.PeopleManagement.Components
+@using UKParliament.CodeTest.Web.Services
+@inject IPersonService PersonService
+
+@rendermode InteractiveServer
+
+<h3>Person Management</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <PersonList @ref="_personList" OnEditPerson="EditPerson" />
+        </div>
+
+        @if (_selectedPerson != null)
+        {
+        <div class="col-md-6 col-sm-12">
+            <PersonEdit Person="_selectedPerson" OnSave="SavePerson" OnCancel="CancelEdit" EditContext="_editContext" />
+        </div>
+        }        
+    </div>
+</div>
+@code {
+    private PersonList _personList;
+    private PersonDto _selectedPerson;
+
+    private EditContext _editContext;
+
+    private void EditPerson(PersonDto person)
+    {
+        _selectedPerson = person;
+        _editContext = new EditContext(_selectedPerson);
+    }
+
+    private async Task SavePerson(PersonDto person)
+    {
+        await PersonService.UpdatePersonAsync(person);
+        _selectedPerson = null;
+        await _personList.RefreshList();
+    }
+
+    private void CancelEdit()
+    {
+        _selectedPerson = null;
+    }
+}

@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using UKParliament.CodeTest.Dtos;
 
 namespace UKParliament.CodeTest.Web.Services;
@@ -14,28 +13,47 @@ public class PersonService : IPersonService
         _httpClient = httpClientFactory.CreateClient("ApiClient");
     }
 
-    public async Task<IEnumerable<PersonDto>> GetPersonsAsync()
+    //TODO - an architectural improvement will be to map from the DTO to a ViewModel
+    //This will allow the use of UI specific annotations and neater validation
+    public async Task<IEnumerable<PersonDto>> GetPeopleAsync()
     {
-        var response = await _httpClient.GetAsync("data-api/persons");
+        var response = await _httpClient.GetAsync("data-api/persons/all");
         response.EnsureSuccessStatusCode();
-        var persons = await response.Content.ReadFromJsonAsync<IEnumerable<PersonDto>>();
-        return persons ?? Enumerable.Empty<PersonDto>();
+        var responseDto = await response.Content.ReadFromJsonAsync<GetPeopleResponseDto>();
+
+        if (responseDto?.People != null && responseDto.IsSuccess)
+        {
+            return responseDto.People;
+        }
+        return Enumerable.Empty<PersonDto>();
     }
 
     public async Task<PersonDto> CreateNewPersonAsync(PersonDto personDto)
     {
-        var response = await _httpClient.PostAsJsonAsync("data-api/persons", personDto);
+        var response = await _httpClient.PostAsJsonAsync("data-api/persons/create", personDto);
         response.EnsureSuccessStatusCode();
         var createdPerson = await response.Content.ReadFromJsonAsync<PersonDto>();
         return createdPerson ?? throw new InvalidOperationException("Failed to create person.");
     }
 
+    public async Task<PersonDto> GetPersonByIdAsync(int id)
+    {
+        var response = await _httpClient.GetAsync($"data-api/persons/{id}");
+        response.EnsureSuccessStatusCode();
+        var responseDto = await response.Content.ReadFromJsonAsync<GetPersonResponseDto>();
+
+        if (responseDto?.Person != null && responseDto.IsSuccess)
+        {
+            return responseDto.Person;
+        }
+        throw new InvalidOperationException("Failed to retrieve person.");
+    }
+
     public async Task<PersonDto> UpdatePersonAsync(PersonDto personDto)
     {
-        var response = await _httpClient.PutAsJsonAsync($"data-api/persons/{personDto.Id}", personDto);
+        var response = await _httpClient.PutAsJsonAsync($"data-api/persons/update", personDto);
         response.EnsureSuccessStatusCode();
         var updatedPerson = await response.Content.ReadFromJsonAsync<PersonDto>();
         return updatedPerson ?? throw new InvalidOperationException("Failed to update person.");
     }
-
 }

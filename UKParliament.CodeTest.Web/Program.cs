@@ -36,10 +36,17 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-builder.Services.AddHttpClient();
+var apiBaseUrl = builder.Configuration.GetSection("ApiSettings:BaseUrl").Value;
+builder.Services.AddHttpClient("ApiClient", client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl!);
+});
+//builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
+//builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<IPersonService, PersonService>();
- 
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

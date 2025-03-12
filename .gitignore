@@ -361,3 +361,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore all launchSettings.json files
+**/launchSettings.json
+
+# Except for the API project's launchSettings.json
+!UKParliament.CodeTest.Api/Properties/launchSettings.json
