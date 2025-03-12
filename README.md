@@ -20,6 +20,8 @@
 
 5. Click the green Play button to start both the web app and the API app.
 
+6. The API Swagger page opens up in a separate browser window.
+   
 ## Configuring the Web App to Use the API App's URI
 
 The web app is configured to use the API app's URI as its HTTP client base URL. This configuration is done in the `appsettings.json` file:
