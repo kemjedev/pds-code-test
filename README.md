@@ -28,5 +28,6 @@ The web app is configured to use the API app's URI as its HTTP client base URL. 
 In the `Program.cs` file, the `HttpClient` is configured to use this base URL:
 { "ApiSettings": { "BaseUrl": "https://localhost:7167/" } }
 
+![image](https://github.com/user-attachments/assets/ca74d62e-f151-4efc-8de2-5d94a3c3be75)
 
 
